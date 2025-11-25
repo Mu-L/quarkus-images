@@ -58,6 +58,24 @@
                             </args>
                         </configuration>
                     </execution>
+
+                    <execution>
+                        <id>ubi10</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <args>
+                                <argument>--dockerfile-dir=${project.basedir}/target/docker</argument>
+                                <argument>--ubi-minimal=${ubi10-min.base}</argument>
+                                <argument>--out=quay.io/quarkus/ubi10-quarkus-native-binary-s2i:2.0</argument>
+                                <argument>--basedir=${project.basedir}</argument>
+                                <argument>--dry-run=${jdock.dry-run}</argument>
+                                <argument>--alias=quay.io/quarkus/ubi10-quarkus-native-binary-s2i:2.0-${maven.build.timestamp}</argument>
+                            </args>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

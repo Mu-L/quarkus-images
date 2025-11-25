@@ -40,6 +40,9 @@
         <ubi9-min.base>registry.access.redhat.com/ubi9/ubi-minimal:9.5</ubi9-min.base>
         <ubi9-micro.base>registry.access.redhat.com/ubi9-micro:9.5</ubi9-micro.base>
 
+        <ubi10-min.base>registry.access.redhat.com/ubi10/ubi-minimal:10.1</ubi10-min.base>
+        <ubi10-micro.base>registry.access.redhat.com/ubi10-micro:10.1</ubi10-micro.base>
+
         <jdock.dry-run>false</jdock.dry-run>
     </properties>
     <developers>
