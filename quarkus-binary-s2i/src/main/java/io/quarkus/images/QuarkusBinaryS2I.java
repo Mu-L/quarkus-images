@@ -2,6 +2,7 @@ package io.quarkus.images;
 
 import io.quarkus.images.modules.QuarkusUserModule;
 import io.quarkus.images.modules.UsLangModule;
+import io.quarkus.images.utils.Rpms;
 
 import java.util.Map;
 
@@ -10,7 +11,7 @@ public class QuarkusBinaryS2I {
     private static Dockerfile define(String minimal) {
         return Dockerfile.from(minimal)
                 .user("root") // Switch to 1001 later
-                .install("tar", "gzip", "gcc", "glibc-devel", "zlib-devel", "shadow-utils", "unzip", "gcc-c++",
+                .install("tar", "gzip", "gcc", "glibc-devel", Rpms.zlibDevel(minimal), "shadow-utils", "unzip", "gcc-c++",
                         "glibc-langpack-en")
                 .module(new UsLangModule())
                 .module(new QuarkusUserModule())

@@ -1,12 +1,10 @@
 package io.quarkus.images;
 
-import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import io.quarkus.images.config.Config;
 import io.quarkus.images.config.Variant;
 import io.quarkus.images.modules.*;
+import io.quarkus.images.utils.Rpms;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +13,8 @@ public class QuarkusNativeS2IBuilder {
     public static Dockerfile getS2iImage(Config.ImageConfig config, Variant image, String base) {
         return Dockerfile.from(base)
                 .user("root")
-                .install("tar", "gzip", "gcc", "glibc-devel", "zlib-devel", "shadow-utils", "unzip", "gcc-c++", "tzdata")
+                .install("tar", "gzip", "gcc", "glibc-devel", Rpms.zlibDevel(base), "shadow-utils", "unzip", "gcc-c++",
+                        "tzdata")
                 .install("glibc-langpack-en")
                 .module(new UsLangModule())
                 .module(new QuarkusUserModule())

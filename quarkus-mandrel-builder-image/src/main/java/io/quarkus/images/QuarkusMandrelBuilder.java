@@ -7,6 +7,7 @@ import io.quarkus.images.modules.QuarkusDirectoryModule;
 import io.quarkus.images.modules.QuarkusUserModule;
 import io.quarkus.images.modules.UpxModule;
 import io.quarkus.images.modules.UsLangModule;
+import io.quarkus.images.utils.Rpms;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -23,7 +24,8 @@ public class QuarkusMandrelBuilder {
         df
                 .installer("microdnf")
                 .user("root")
-                .install("tar", "gzip", "gcc", "glibc-devel", "zlib-devel", "shadow-utils", "unzip", "gcc-c++", "findutils")
+                .install("tar", "gzip", "gcc", "glibc-devel", Rpms.zlibDevel(base), "shadow-utils",
+                        "unzip", "gcc-c++", "findutils")
                 .install("glibc-langpack-en")
                 .module(new UsLangModule())
                 .module(new QuarkusUserModule())
@@ -83,8 +85,7 @@ public class QuarkusMandrelBuilder {
                     throw new IllegalStateException(String.format(
                             "Inconsistent JDK versions across archs: %s has different version than previously seen %s",
                             Arrays.toString(v),
-                            Arrays.toString(jdkVersion)
-                    ));
+                            Arrays.toString(jdkVersion)));
                 }
             }
         });

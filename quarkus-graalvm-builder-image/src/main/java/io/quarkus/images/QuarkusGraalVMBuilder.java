@@ -3,6 +3,7 @@ package io.quarkus.images;
 import io.quarkus.images.config.Config;
 import io.quarkus.images.config.Variant;
 import io.quarkus.images.modules.*;
+import io.quarkus.images.utils.Rpms;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +14,8 @@ public class QuarkusGraalVMBuilder {
         Dockerfile df = Dockerfile.from(base);
         df
                 .user("root")
-                .install("tar", "gzip", "gcc", "glibc-devel", "zlib-devel", "shadow-utils", "unzip", "gcc-c++", "findutils")
+                .install("tar", "gzip", "gcc", "glibc-devel", Rpms.zlibDevel(base), "shadow-utils", "unzip", "gcc-c++",
+                        "findutils")
                 .install("glibc-langpack-en")
                 .module(new UsLangModule())
                 .module(new QuarkusUserModule())
