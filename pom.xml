@@ -53,6 +53,13 @@
                 <role>Plumber</role>
             </roles>
         </developer>
+        <developer>
+            <name>Guillaume Smet</name>
+            <email>guillaume.smet@gmail.com</email>
+            <roles>
+                <role>Assistant Plumber</role>
+            </roles>
+        </developer>
     </developers>
 
     <build>
