@@ -90,7 +90,7 @@ public class Dockerfile implements Buildable {
         return this;
     }
 
-    public Dockerfile entrypoint(String cmd) {
+    public Dockerfile entrypoint(String... cmd) {
         context.add(new EntryPointCommand(cmd));
         return this;
     }

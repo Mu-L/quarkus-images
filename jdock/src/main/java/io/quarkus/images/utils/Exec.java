@@ -2,19 +2,22 @@ package io.quarkus.images.utils;
 
 import io.quarkus.images.Buildable;
 import io.quarkus.images.JDock;
+import io.quarkus.images.utils.ContainerToolCommands.DockerCommands;
+import io.quarkus.images.utils.ContainerToolCommands.PodmanCommands;
 import org.zeroturnaround.exec.ProcessExecutor;
 import org.zeroturnaround.exec.stream.LogOutputStream;
 
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class Exec {
+
+    private static ContainerToolCommands containerToolCommands;
+
     public static void execute(List<String> command, Function<Exception, RuntimeException> exceptionMapper) {
         try {
             new ProcessExecutor().command(command)
@@ -60,15 +63,7 @@ public class Exec {
 
         if (!dryRun) {
             System.out.println("⚙️\tLaunching the build process: ");
-            List<String> list = new ArrayList<>(
-                    Arrays.asList("docker", "buildx", "build", "--load", "-f", JDock.dockerFileDir + "/" + fileName));
-            if (arch != null) {
-                list.add("--platform=linux/" + arch);
-            }
-            list.add("--tag");
-            list.add(imageName);
-            list.add(".");
-            Exec.execute(list,
+            Exec.execute(Exec.getContainerTool().build(JDock.dockerFileDir + "/" + fileName, arch, imageName),
                     e -> new RuntimeException("Unable to build image for " + dockerfile.getAbsolutePath(), e));
             System.out.println("⚙️\tImage " + imageName + " created");
         } else {
@@ -78,7 +73,7 @@ public class Exec {
 
         if (!local && !dryRun) {
             String t = imageName;
-            Exec.execute(List.of("docker", "push", imageName),
+            Exec.execute(Exec.getContainerTool().push(imageName),
                     e -> new RuntimeException("Unable to push image " + t, e));
             System.out.println("⚙️\tImage " + imageName + " pushed");
         } else if (!local) {
@@ -87,12 +82,18 @@ public class Exec {
 
     }
 
-    public static String getContainerTool() {
+    public static ContainerToolCommands getContainerTool() {
+        if (containerToolCommands != null) {
+            return containerToolCommands;
+        }
+
         if (findExecutable("docker") != null) {
-            return "docker";
+            containerToolCommands = DockerCommands.INSTANCE;
+            return containerToolCommands;
         }
         if (findExecutable("podman") != null) {
-            return "podman";
+            containerToolCommands = PodmanCommands.INSTANCE;
+            return containerToolCommands;
         }
         throw new IllegalStateException("No container tool found in system path");
     }
