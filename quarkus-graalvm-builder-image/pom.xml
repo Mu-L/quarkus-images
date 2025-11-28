@@ -60,6 +60,24 @@
                             </args>
                         </configuration>
                     </execution>
+
+                    <execution>
+                        <id>ubi10</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <args>
+                                <argument>--dockerfile-dir=${project.basedir}/target/docker</argument>
+                                <argument>--ubi-minimal=${ubi10-min.base}</argument>
+                                <argument>--out=quay.io/${org}/ubi10-quarkus-graalvmce-builder-image</argument>
+                                <argument>--in=${images.file}</argument>
+                                <argument>--dry-run=${jdock.dry-run}</argument>
+                                <argument>--alias=quay.io/${org}/ubi10-quarkus-graalvmce-builder-image:__VERSION__-${maven.build.timestamp}</argument>
+                            </args>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
         </plugins>

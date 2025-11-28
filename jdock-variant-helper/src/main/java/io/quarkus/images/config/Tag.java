@@ -35,7 +35,7 @@ public class Tag {
             } else {
                 final String src = img.fullname(config, img.variants.get(0));
                 System.out.println("\uD83D\uDD25\tCreating tag " + fn + " => " + src);
-                Exec.execute(List.of("docker", "tag", src, fn),
+                Exec.execute(Exec.getContainerTool().tag(src, fn),
                         e -> new RuntimeException("Unable to create tag for " + src, e));
                 if (push) {
                     Exec.execute(List.of("docker", "push", fn),

@@ -40,7 +40,9 @@ For this reason, we recommend using a stable version.
 ## Build Prerequisites
 
 * Apache Maven
-* Docker with Build Kit / `buildx` - See https://docs.docker.com/develop/develop-images/build_enhancements/.
+* Either Docker or Podman with cross-compilation support:
+  * Docker with Build Kit / `buildx` - See https://docs.docker.com/develop/develop-images/build_enhancements/.
+  * Podman with QEMU - install `sudo dnf install qemu-user-static` then run `sudo systemctl restart systemd-binfmt` and finally check it works with `podman run --rm --platform=linux/arm64 alpine uname -m` - it should display `aarch64`)
 
 ## Build
 

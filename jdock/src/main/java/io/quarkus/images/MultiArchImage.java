@@ -3,11 +3,8 @@ package io.quarkus.images;
 import io.quarkus.images.utils.Exec;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class MultiArchImage {
@@ -54,9 +51,7 @@ public class MultiArchImage {
                 // docker buildx build --load --platform linux/arm64 --tag cescoffier/mandrel-java17-22.1.0.0-final-arm64 -f mandrel-java17-22.1.0.0-Final-arm64.Dockerfile .
                 // Build the image (platform-specific)
                 Exec.execute(
-                        List.of(Exec.getContainerTool(), "buildx", "build", "--load", "--platform=linux/" + arch, "--tag",
-                                imageName,
-                                "-f", JDock.dockerFileDir + "/" + fileName, "."),
+                        Exec.getContainerTool().build(JDock.dockerFileDir + "/" + fileName, arch, imageName),
                         e -> new RuntimeException("Unable to build image for " + dockerfile.getAbsolutePath(), e));
             } else {
                 System.out.println("⚠️️\tSkipping the container build for " + imageName
@@ -78,7 +73,8 @@ public class MultiArchImage {
 
         for (Map.Entry<String, String> entry : locals.entrySet()) {
             System.out.println("⚙️\tPushing " + entry.getValue() + " (" + entry.getKey() + ")");
-            Exec.execute(List.of("docker", "push", entry.getValue()),
+            Exec.execute(
+                    Exec.getContainerTool().push(entry.getValue()),
                     e -> new RuntimeException("Unable to push " + entry.getValue(), e));
         }
 
@@ -93,14 +89,10 @@ public class MultiArchImage {
                     "⚙️\t\t" + entry.getKey() + " => " + entry.getValue());
         }
 
-        List<String> command = new ArrayList<>(Arrays.asList("docker", "manifest", "create", name));
-        for (Map.Entry<String, String> entry : archToImage.entrySet()) {
-            command.addAll(List.of("--amend", entry.getValue()));
-        }
+        Exec.execute(Exec.getContainerTool().createManifest(name, archToImage),
+                e -> new RuntimeException("Unable to build manifest for " + name, e));
 
-        Exec.execute(command, e -> new RuntimeException("Unable to build manifest for " + name, e));
-
-        Exec.execute(List.of("docker", "manifest", "push", name),
+        Exec.execute(Exec.getContainerTool().pushManifest(name),
                 e -> new RuntimeException("Unable to push manifest for " + name, e));
 
     }

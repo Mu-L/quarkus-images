@@ -56,7 +56,7 @@ public class Test implements Callable<Integer> {
         if (Files.exists(tsDir)) {
             MoreFiles.deleteRecursively(tsDir);
         }
-        final List<String> git = List.of("git", "clone", "--branch", "testing-more-runtime-images",
+        final List<String> git = List.of("git", "clone", "--branch", "karm-prepare-ubi-10",
                 "https://github.com/Karm/mandrel-integration-tests.git");
         final Process gitProcess = runCommand(git, new File("."));
         gitProcess.waitFor(3, TimeUnit.MINUTES); // Generous. It's a tiny repo.
