@@ -17,8 +17,8 @@ public class DistrolessTest {
         System.out.println(Dockerfile
                 .multistages()
                 .stage("debian", Dockerfile.from("debian-stage-slim"))
-                .stage("scratch", Dockerfile.from("gcr.io/distroless/cc"))
-                .stage(Dockerfile.from("scratch")
+                .stage("distroless", Dockerfile.from("gcr.io/distroless/cc"))
+                .stage(Dockerfile.from("distroless")
                         .copyFromStage("debian", "/lib/x86_64-linux-gnu/libz.so.1", "/lib/x86_64-linux-gnu"))
                 .build());
 
@@ -29,8 +29,8 @@ public class DistrolessTest {
         System.out.println(Dockerfile
                 .multistages()
                 .stage("ubi", Dockerfile.from("registry.access.redhat.com/ubi8/ubi-minimal:8.10"))
-                .stage("scratch", Dockerfile.from("registry.access.redhat.com/ubi8/ubi-micro"))
-                .stage(Dockerfile.from("scratch")
+                .stage("micro", Dockerfile.from("registry.access.redhat.com/ubi8/ubi-micro"))
+                .stage(Dockerfile.from("micro")
                         .copyFromStage("ubi", "/usr/lib64/libgcc_s.so.1")
                         .copyFromStage("ubi", "/usr/lib64/libstdc++.so.6")
                         .copyFromStage("ubi", "/usr/lib64/libz.so.1"))

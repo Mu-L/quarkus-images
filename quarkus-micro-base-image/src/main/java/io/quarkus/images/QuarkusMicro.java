@@ -7,8 +7,8 @@ public class QuarkusMicro {
     static MultiArchImage define(String minimal, String micro, String output) {
         MultiStageDockerFile img = Dockerfile.multistages()
                 .stage("ubi", Dockerfile.from(minimal))
-                .stage("scratch", Dockerfile.from(micro))
-                .stage(Dockerfile.from("scratch")
+                .stage("micro", Dockerfile.from(micro))
+                .stage(Dockerfile.from("micro")
                         .copyFromStage("ubi", "/usr/lib64/libgcc_s.so.1")
                         .copyFromStage("ubi", "/usr/lib64/libstdc++.so.6")
                         .copyFromStage("ubi", "/usr/lib64/libz.so.1"));

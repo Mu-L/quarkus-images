@@ -13,8 +13,8 @@ public class QuarkusDistroless {
     private static MultiStageDockerFile getDockerFile(String arch) {
         return Dockerfile.multistages()
                 .stage("debian", Dockerfile.from("debian:stable-slim"))
-                .stage("scratch", Dockerfile.from("gcr.io/distroless/cc"))
-                .stage(Dockerfile.from("scratch")
+                .stage("distroless", Dockerfile.from("gcr.io/distroless/cc"))
+                .stage(Dockerfile.from("distroless")
                         .copyFromStage("debian", "/lib/" + arch + "-linux-gnu/libz.so.1"));
     }
 }
