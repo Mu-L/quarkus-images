@@ -87,12 +87,12 @@ public class Exec {
             return containerToolCommands;
         }
 
-        if (findExecutable("docker") != null) {
-            containerToolCommands = DockerCommands.INSTANCE;
-            return containerToolCommands;
-        }
         if (findExecutable("podman") != null) {
             containerToolCommands = PodmanCommands.INSTANCE;
+            return containerToolCommands;
+        }
+        if (findExecutable("docker") != null) {
+            containerToolCommands = DockerCommands.INSTANCE;
             return containerToolCommands;
         }
         throw new IllegalStateException("No container tool found in system path");
