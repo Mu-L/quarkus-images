@@ -7,6 +7,7 @@ import io.quarkus.images.commands.CopyCommand;
 import io.quarkus.images.commands.EnvCommand;
 import io.quarkus.images.commands.MicrodnfCommand;
 import io.quarkus.images.commands.RunCommand;
+import io.quarkus.images.utils.Exec;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -88,14 +89,22 @@ public class MandrelModule extends AbstractModule {
             if (!a.store.exists()) {
                 throw new RuntimeException("Artifact not found: " + a.store.getAbsolutePath());
             }
+            String cmd = "tar";
+            // On macOS, use gtar if available (GNU tar supports --wildcards properly)
+            if (System.getProperty("os.name").toLowerCase().contains("mac")) {
+                if (Exec.findExecutable("gtar") != null) {
+                    cmd = "gtar";
+                }
+            }
             final ProcessBuilder pb = new ProcessBuilder(
-                    "tar",
+                    cmd,
                     "--extract",
                     "--wildcards",
                     "--file", a.store.getAbsolutePath(),
                     "--directory", tempDir.toString(),
                     "--strip-components=1",
                     "*/release");
+            System.out.println("Extracting Mandrel release file with command: " + String.join(" ", pb.command()));
             pb.environment().put("PATH", System.getenv("PATH"));
             pb.inheritIO();
             final Process p = pb.start();
