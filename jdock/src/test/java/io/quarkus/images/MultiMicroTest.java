@@ -19,8 +19,8 @@ public class MultiMicroTest {
     void test() {
         MultiStageDockerFile micro = Dockerfile.multistages()
                 .stage("ubi", Dockerfile.from("registry.access.redhat.com/ubi8/ubi-minimal:8.10"))
-                .stage("scratch", Dockerfile.from("registry.access.redhat.com/ubi8/ubi-micro"))
-                .stage(Dockerfile.from("scratch")
+                .stage("micro", Dockerfile.from("registry.access.redhat.com/ubi8/ubi-micro"))
+                .stage(Dockerfile.from("micro")
                         .copyFromStage("ubi", "/usr/lib64/libgcc_s.so.1")
                         .copyFromStage("ubi", "/usr/lib64/libstdc++.so.6")
                         .copyFromStage("ubi", "/usr/lib64/libz.so.1"));
