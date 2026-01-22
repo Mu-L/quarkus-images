@@ -9,7 +9,7 @@ import java.util.Objects;
 
 public class UpxModule extends AbstractModule {
 
-    public static final String UPX_VERSION = "5.0.1";
+    public static final String UPX_VERSION = "5.1.0";
     public static final String URL = "https://github.com/upx/upx/releases/download/v%1$s/upx-%1$s-%2$s_linux.tar.xz";
     private final String arch;
 
