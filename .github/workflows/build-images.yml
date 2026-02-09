@@ -43,7 +43,9 @@ jobs:
     steps:
     - name: Install Podman and qemu
       run: |
+        sudo apt-get update
         sudo apt-get install podman qemu-user-static binfmt-support
+        sudo update-binfmts --enable qemu-aarch64
         sudo systemctl restart systemd-binfmt
     - name: Re-claim some disk space
       run: |
@@ -51,7 +53,8 @@ jobs:
         sudo rm -rf /swapfile /usr/share/dotnet /usr/local/lib/android \
         /usr/local/share/powershell /usr/share/swift /usr/local/.ghcup
         sudo apt-get clean
-        yes | podman system prune -a
+        podman system prune -a -f
+        sudo podman system prune -a -f
         df -h
     - uses: actions/checkout@v6
     - uses: actions/setup-java@v5

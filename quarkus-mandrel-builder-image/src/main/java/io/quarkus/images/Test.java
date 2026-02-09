@@ -86,9 +86,10 @@ public class Test implements Callable<Integer> {
                     "-Ptestsuite-builder-image",
                     "-Dtest=AppReproducersTest#imageioAWTContainerTest",
                     "-Dquarkus.native.builder-image=" + builderImage,
-                    "-Dquarkus.native.container-runtime=docker",
-                    "-Drootless.container-runtime=false",
-                    "-Ddocker.with.sudo=false");
+                    "-Dquarkus.native.container-runtime=podman",
+                    "-Drootless.container-runtime=true",
+                    "-Dpodman.with.sudo=false");
+            System.out.println("Running: " + testsuite);
             final Process testsuiteProcess = runCommand(testsuite, tsDir.toFile());
             testsuiteProcess.waitFor(10, TimeUnit.MINUTES); // We might be downloading 6+ base images on first run.
             if (testsuiteProcess.exitValue() != 0) {
